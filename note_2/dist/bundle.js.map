@@ -1,0 +1,1 @@
+{"version":3,"file":"bundle.js","mappings":"mBASAA,QAAQC,IAPC,iBAII,uBAJU,K","sources":["webpack://note_2/./src/index.ts"],"sourcesContent":["function greet(name: string): string {\r\n\r\n  return `Hello, ${name}!`;\r\n\r\n}\r\n\r\nconst user = 'TypeScript Developer';\r\n\r\n\r\nconsole.log(greet(user));"],"names":["console","log"],"sourceRoot":""}
