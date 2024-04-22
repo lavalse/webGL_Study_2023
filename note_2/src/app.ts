@@ -1,4 +1,4 @@
-import { createShader  } from './createShader';
+import { initShaders  } from './webglUtils';
 
 let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("webGL") ;
 
@@ -18,8 +18,9 @@ void main(){
 }
 `;
 
-let vertexShader = createShader(gl,gl.VERTEX_SHADER,vertexSource);
-let fragmentShader = createShader(gl,gl.FRAGMENT_SHADER,fragmentSource);
+const webGLProgram = initShaders(gl,vertexSource,fragmentSource);
+
+console.log(webGLProgram);
 
 gl.clearColor(0.0,0.0,0.0,1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
