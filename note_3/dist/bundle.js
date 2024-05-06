@@ -1,59 +1,37 @@
 /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.demo_1 = void 0;
+exports.demo_3 = void 0;
 var webglUtils_1 = __webpack_require__(2);
-function demo_1() {
-    var canvas = document.getElementById("webGL_Demo_1");
+var createBuffer_1 = __webpack_require__(3);
+var initTexture_1 = __webpack_require__(4);
+function demo_3() {
+    var canvas = document.getElementById("webGL_Demo_3");
     var gl = canvas.getContext("webgl");
-    //vertexShader, fragmentShader
-    var vertexSource = "\n  attribute vec2 a_position;\n  attribute vec3 a_vertexColor;\n  varying vec3 v_vertexColor;\n  void main(){\n    v_vertexColor = a_vertexColor;\n    gl_Position = vec4(a_position,0.0,1.0);\n    gl_PointSize = 10.0;\n  }\n  ";
-    var fragmentSource = "\n  precision mediump float;\n  varying vec3 v_vertexColor;\n  \n  void main(){\n    gl_FragColor = vec4(v_vertexColor,1.0);\n  }\n  ";
-    var webGLProgram = (0, webglUtils_1.initShaders)(gl, vertexSource, fragmentSource);
+    var vertexShader = __webpack_require__(6);
+    var fragmentShader = __webpack_require__(7);
+    var webGLProgram = (0, webglUtils_1.initShaders)(gl, vertexShader, fragmentShader);
+    (0, createBuffer_1.createBuffer)(gl, webGLProgram);
+    (0, initTexture_1.initTexture)(gl, webGLProgram);
+    //draw content
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
-    // const vertices = [
-    //   -0.5,0.0,1.0,0.0,0.0,
-    //   0.5,0.0,0.0,1.0,0.0,
-    //   0.0,0.8,0.0,0.0,1.0
-    // ];
-    var vertices = [];
-    var count = 10;
-    for (var i = 0; i < count; i++) {
-        var x = Math.random() * 2 - 1;
-        var y = Math.random() * 2 - 1;
-        var r = Math.random();
-        var g = Math.random();
-        var b = Math.random();
-        vertices.push(x, y, r, g, b);
-    }
-    var vertices32 = new Float32Array(vertices);
-    var FSIZE = vertices32.BYTES_PER_ELEMENT;
-    //创建buffer，然后来使用buffer
-    var buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, vertices32, gl.STATIC_DRAW);
-    var a_position = gl.getAttribLocation(webGLProgram, "a_position");
-    gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 5 * FSIZE, 0);
-    var a_vertexColor = gl.getAttribLocation(webGLProgram, "a_vertexColor");
-    gl.vertexAttribPointer(a_vertexColor, 3, gl.FLOAT, false, 5 * FSIZE, 2 * FSIZE);
-    gl.enableVertexAttribArray(a_position);
-    gl.enableVertexAttribArray(a_vertexColor);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, count);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
-exports.demo_1 = demo_1;
+exports.demo_3 = demo_3;
 
 
 /***/ }),
 /* 2 */
 /***/ ((__unused_webpack_module, exports) => {
 
+"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.initShaders = void 0;
@@ -108,42 +86,96 @@ exports.initShaders = initShaders;
 
 /***/ }),
 /* 3 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports) => {
 
+"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.demo_2 = void 0;
-var webglUtils_1 = __webpack_require__(2);
-function demo_2() {
-    var canvas = document.getElementById("webGL_Demo_2");
-    var gl = canvas.getContext("webgl");
-    //vertexShader, fragmentShader
-    var vertexSource = "\n  attribute vec2 a_position;\n  attribute vec3 a_vertexColor;\n  varying vec3 v_vertexColor;\n  void main(){\n    v_vertexColor = a_vertexColor;\n    gl_Position = vec4(a_position,0.0,1.0);\n    gl_PointSize = 10.0;\n  }\n  ";
-    var fragmentSource = "\n  precision mediump float;\n  varying vec3 v_vertexColor;\n  \n  void main(){\n    gl_FragColor = vec4(v_vertexColor,1.0);\n  }\n  ";
-    var webGLProgram = (0, webglUtils_1.initShaders)(gl, vertexSource, fragmentSource);
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    var vertices = [
-        -0.5, 0.0, 1.0, 0.0, 0.0,
-        0.5, 0.0, 0.0, 1.0, 0.0,
-        0.0, 0.8, 0.0, 0.0, 1.0
-    ];
-    var vertices32 = new Float32Array(vertices);
-    var FSIZE = vertices32.BYTES_PER_ELEMENT;
-    //创建buffer，然后来使用buffer
-    var buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, vertices32, gl.STATIC_DRAW);
-    var a_position = gl.getAttribLocation(webGLProgram, "a_position");
-    gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 5 * FSIZE, 0);
-    var a_vertexColor = gl.getAttribLocation(webGLProgram, "a_vertexColor");
-    gl.vertexAttribPointer(a_vertexColor, 3, gl.FLOAT, false, 5 * FSIZE, 2 * FSIZE);
+exports.createBuffer = void 0;
+function createBuffer(gl, program) {
+    //create vertex position arrary
+    var vertices = new Float32Array([
+        -0.5, -0.5, 0.0,
+        -0.5, 0.5, 0.0,
+        0.5, -0.5, 0.0,
+        0.5, 0.5, 0.0
+    ]);
+    var FSIZE = vertices.BYTES_PER_ELEMENT;
+    var uvs = new Float32Array([
+        0.0, 0.0,
+        0.0, 1.0,
+        1.0, 0.0,
+        1.0, 1.0
+    ]);
+    var vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+    var a_position = gl.getAttribLocation(program, "a_position");
+    gl.vertexAttribPointer(a_position, 3, gl.FLOAT, false, FSIZE * 3, 0);
     gl.enableVertexAttribArray(a_position);
-    gl.enableVertexAttribArray(a_vertexColor);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 3);
+    var uvBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, uvs, gl.STATIC_DRAW);
+    var a_uv = gl.getAttribLocation(program, "a_uv");
+    gl.vertexAttribPointer(a_uv, 2, gl.FLOAT, false, FSIZE * 2, 0);
+    gl.enableVertexAttribArray(a_uv);
 }
-exports.demo_2 = demo_2;
+exports.createBuffer = createBuffer;
 
+
+/***/ }),
+/* 4 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.initTexture = void 0;
+var cat_512x512_jpg_1 = __importDefault(__webpack_require__(5));
+function initTexture(gl, program) {
+    var texture = gl.createTexture();
+    var u_sampler = gl.getUniformLocation(program, "u_sampler");
+    var image = new Image();
+    image.src = cat_512x512_jpg_1.default;
+    image.onload = function () {
+        console.log("image loaded");
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+        gl.uniform1i(u_sampler, 0);
+        var app = document.getElementById("image");
+        app === null || app === void 0 ? void 0 : app.appendChild(image);
+    };
+}
+exports.initTexture = initTexture;
+
+
+/***/ }),
+/* 5 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "d078a350673f3265a04f2d8a76d87a03.jpg");
+
+/***/ }),
+/* 6 */
+/***/ ((module) => {
+
+module.exports = "\r\nattribute vec3 a_position;\r\nattribute vec2 a_uv;\r\nvarying vec2 v_uv;\r\n\r\nvoid main(){\r\n  v_uv = a_uv;\r\n  gl_Position = vec4(a_position, 1.0);\r\n  gl_PointSize = 10.0;\r\n}"
+
+/***/ }),
+/* 7 */
+/***/ ((module) => {
+
+module.exports = "precision mediump float;\r\n\r\nvarying vec2 v_uv;\r\nuniform sampler2D u_sampler;\r\n\r\nvoid main(){\r\n  vec4 color = texture2D(u_sampler, v_uv);\r\n  gl_FragColor = color;\r\n}"
 
 /***/ })
 /******/ 	]);
@@ -166,23 +198,88 @@ exports.demo_2 = demo_2;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/global */
+/******/ 	(() => {
+/******/ 		__webpack_require__.g = (function() {
+/******/ 			if (typeof globalThis === 'object') return globalThis;
+/******/ 			try {
+/******/ 				return this || new Function('return this')();
+/******/ 			} catch (e) {
+/******/ 				if (typeof window === 'object') return window;
+/******/ 			}
+/******/ 		})();
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	(() => {
+/******/ 		var scriptUrl;
+/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
+/******/ 		var document = __webpack_require__.g.document;
+/******/ 		if (!scriptUrl && document) {
+/******/ 			if (document.currentScript)
+/******/ 				scriptUrl = document.currentScript.src;
+/******/ 			if (!scriptUrl) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				if(scripts.length) {
+/******/ 					var i = scripts.length - 1;
+/******/ 					while (i > -1 && (!scriptUrl || !/^http(s?):/.test(scriptUrl))) scriptUrl = scripts[i--].src;
+/******/ 				}
+/******/ 			}
+/******/ 		}
+/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
+/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
+/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
+/******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
+/******/ 		__webpack_require__.p = scriptUrl;
+/******/ 	})();
+/******/ 	
+/************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
 var exports = __webpack_exports__;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var random_points_in_buffers_1 = __webpack_require__(1);
-var transform_matrix_1 = __webpack_require__(3);
-(0, random_points_in_buffers_1.demo_1)();
-(0, transform_matrix_1.demo_2)();
+var assign_texture_1 = __webpack_require__(1);
+// demo_1();
+// demo_2();
+(0, assign_texture_1.demo_3)();
 
 })();
 

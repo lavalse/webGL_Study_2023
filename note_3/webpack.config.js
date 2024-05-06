@@ -27,6 +27,20 @@ module.exports = {
         exclude: /node_modules/,
 
       },
+      {
+        test: /\.glsl$/,
+
+        use: 'webpack-glsl-loader',
+
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.(png|jpg|gif|svg)$/i,
+
+        use: 'file-loader',
+
+        exclude: /node_modules/,
+      }
 
     ],
 

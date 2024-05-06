@@ -11,10 +11,14 @@ export function demo_2 (){
   attribute vec2 a_position;
   attribute vec3 a_vertexColor;
   varying vec3 v_vertexColor;
-  uniform mat4 u_transformMatrix;
+  uniform mat4 u_tMatrix;
+  uniform mat4 u_rMatrix;
+  uniform mat4 u_sMatrix;
+
   void main(){
+    mat4 modelMatrix = u_tMatrix * u_rMatrix * u_sMatrix;
     v_vertexColor = a_vertexColor;
-    gl_Position = u_transformMatrix * vec4(a_position,0.0,1.0);
+    gl_Position = modelMatrix * vec4(a_position,0.0,1.0);
     gl_PointSize = 10.0;
   }
   `;
@@ -30,14 +34,11 @@ export function demo_2 (){
   
   const webGLProgram = <WebGLProgram>initShaders(gl,vertexSource,fragmentSource);
   
-  gl.clearColor(0.0,0.0,0.0,1.0);
-  gl.clear(gl.COLOR_BUFFER_BIT);
-  
   const vertices = [
     //x,   y,   r,  g,   b
     -0.5, 0.0, 1.0, 0.0, 0.0,
     0.5,  0.0, 0.0, 1.0, 0.0,
-    0.0,  0.5, 0.0, 0.0, 1.0
+    0.0,  0.8, 0.0, 0.0, 1.0
   ];
   
   
@@ -75,20 +76,38 @@ export function demo_2 (){
     2 * FSIZE
   );
 
-  let transformMatrix = mat4.create();
-  // mat4.fromScaling(transformMatrix,[2,2,1]);
-  mat4.fromTranslation(transformMatrix,[0.5,0,1]);
-
-
-  const u_transformMatrix = gl.getUniformLocation(webGLProgram,"u_transformMatrix");
-  gl.uniformMatrix4fv(u_transformMatrix, false, transformMatrix);
-  
   gl.enableVertexAttribArray(a_position);
   gl.enableVertexAttribArray(a_vertexColor);
+
   
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 3);
-  gl.drawArrays(gl.POINTS,0,3)
-  
+
+  let tMatrix = mat4.create();
+  let rMatrix = mat4.create();
+  let sMatrix = mat4.create();
+
+  const u_tMatrix = gl.getUniformLocation(webGLProgram,"u_tMatrix");
+  const u_rMatrix = gl.getUniformLocation(webGLProgram,"u_rMatrix");
+  const u_sMatrix = gl.getUniformLocation(webGLProgram,"u_sMatrix");
+
+  tick();
+  let counter = 0;
+
+  function tick(){
+    requestAnimationFrame(tick);
+    counter += 0.005;
+    gl.clearColor(0.0,0.0,0.0,1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT); 
+
+    mat4.rotate(rMatrix, rMatrix, 0.1/180*Math.PI, [0,0,1]);
+    mat4.fromTranslation(tMatrix,[Math.sin(counter),-0.3,0.0])
+    gl.uniformMatrix4fv(u_rMatrix, false, rMatrix);
+    gl.uniformMatrix4fv(u_sMatrix, false, sMatrix);
+    gl.uniformMatrix4fv(u_tMatrix, false, tMatrix);
+
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 3);
+    gl.drawArrays(gl.POINTS,0,3)
+
+    
+  }
+
 }
-
-
